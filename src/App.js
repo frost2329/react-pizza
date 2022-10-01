@@ -3,10 +3,20 @@ import Header from "./components/Header";
 import Categories from "./components/Categories";
 import Sort from "./components/Sort";
 import PizzaBlock from "./components/PizzaBlock";
-import pizzas from './assets/pizzas.json'
+import {useEffect, useState} from "react";
+import axios from "axios";
+
 function App() {
+    let [pizzas, setPizzas] =useState([])
     console.log(pizzas)
-  return (
+    useEffect(()=>{
+        axios.get('https://62f53aa6ac59075124ce14b4.mockapi.io/items')
+            .then((response)=>{
+                setPizzas(response.data)
+                console.log(response)
+            })
+    }, [])
+    return (
       <div className="wrapper">
         <Header/>
         <div className="content">
