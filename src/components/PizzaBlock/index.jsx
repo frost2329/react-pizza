@@ -1,6 +1,6 @@
 import {useState} from "react";
 
-function PizzaBlock(props) {
+function Index(props) {
     const [pizzaCount, setPizzaCount] = useState(0)
     const [currentSize, setCurrentSize] = useState(0)
     const [currentType, setCurrentType] = useState(0)
@@ -43,4 +43,4 @@ function PizzaBlock(props) {
     );
 }
 
-export default PizzaBlock
+export default Index
