@@ -4,8 +4,9 @@ import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import {Route, Routes} from "react-router-dom";
 import NotFound from "./pages/NotFound";
-import {useState} from "react";
-
+import {useState, } from "react";
+import React from "react";
+export const AppContext = React.createContext('')
 
 function App() {
     const [searchValue, setSearchValue] = useState('')
@@ -16,7 +17,8 @@ function App() {
     }
     return (
         <div className="wrapper">
-            <Header searchValue={searchValue} onChangeSearchValue={onChangeSearchValue}/>
+            <AppContext.Provider value={{searchValue, currentPage, setCurrentPage, onChangeSearchValue}}>
+            <Header />
             <Routes>
                 <Route path='/' element={<Home currentPage={currentPage}
                                                setCurrentPage={setCurrentPage}
@@ -24,6 +26,7 @@ function App() {
                 <Route path='cart' element={<Cart />}/>
                 <Route path='*' element={<NotFound />}/>
             </Routes>
+            </AppContext.Provider>
         </div>
     );
 }

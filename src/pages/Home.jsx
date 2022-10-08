@@ -1,3 +1,4 @@
+import React from "react";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import LoadingBlock from "../components/PizzaBlock/LoadingBlock";
@@ -5,8 +6,10 @@ import PizzaBlock from "../components/PizzaBlock";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import Paginator from "../components/Paginator/Paginator";
+import {AppContext} from "../App";
 
-function Home(p) {
+function Home() {
+    const {searchValue, currentPage, setCurrentPage} = React.useContext(AppContext)
     const [isLoading, setIsLoading] = useState(true)
     const [pizzas, setPizzas] = useState([])
     const [currentSort, setCurrentSort] = useState({name: 'популярности', sortProperty: 'rating'})
@@ -17,8 +20,8 @@ function Home(p) {
         let order = 'order=' + (currentSort.sortProperty.includes('-') ? 'desc' : 'asc')
         let category = currentCategory === 0 ?'' :'category='+currentCategory
         let limit = 'limit=' + 4
-        let page = 'page=' + p.currentPage
-        let search = 'search=' + p.searchValue
+        let page = 'page=' + currentPage
+        let search = 'search=' + searchValue
         let url = `https://62f53aa6ac59075124ce14b4.mockapi.io/items?${page}&${limit}&${category}&${sort}&${order}&${search}`;
 
             console.log(url)
@@ -29,7 +32,7 @@ function Home(p) {
                     setIsLoading(false)
             })
         window.scrollTo(0, 0)
-    }, [currentSort, currentCategory, p.currentPage, p.searchValue])
+    }, [currentSort, currentCategory, currentPage, searchValue])
 
     return (<div className="content">
         <div className="container">
@@ -48,7 +51,7 @@ function Home(p) {
                                                       sizes={obj.sizes}
                                                       types={obj.types}/>)}
             </div>
-            <Paginator currentPage={p.currentPage} totalCount={10} sizePage={4} onPageNumber={p.setCurrentPage}/>
+            <Paginator currentPage={currentPage} totalCount={10} sizePage={4} onPageNumber={setCurrentPage}/>
         </div>
     </div>)
 }
