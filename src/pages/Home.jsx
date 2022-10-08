@@ -4,28 +4,32 @@ import LoadingBlock from "../components/PizzaBlock/LoadingBlock";
 import PizzaBlock from "../components/PizzaBlock";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import Paginator from "../components/Paginator/Paginator";
 
-function Home() {
+function Home(p) {
     const [isLoading, setIsLoading] = useState(true)
     const [pizzas, setPizzas] = useState([])
     const [currentSort, setCurrentSort] = useState({name: 'популярности', sortProperty: 'rating'})
-    const [currentCategory, setCurrentCategory] =useState('');
-
+    const [currentCategory, setCurrentCategory] =useState(0);
     useEffect(() => {
         setIsLoading(true)
-        let sort = currentSort.sortProperty.replace('-', '')
-        let order = currentSort.sortProperty.includes('-') ? 'desc' : 'asc'
-        let category = currentCategory === 0 ?'':currentCategory;
-        let url = `https://62f53aa6ac59075124ce14b4.mockapi.io/items?sortBy=${sort}&category=${category}&order=${order}`;
-        console.log(url)
-        axios.get(url)
+        let sort = 'sortBy=' + (currentSort.sortProperty.replace('-', ''))
+        let order = 'order=' + (currentSort.sortProperty.includes('-') ? 'desc' : 'asc')
+        let category = currentCategory === 0 ?'' :'category='+currentCategory
+        let limit = 'limit=' + 4
+        let page = 'page=' + p.currentPage
+        let search = 'search=' + p.searchValue
+        let url = `https://62f53aa6ac59075124ce14b4.mockapi.io/items?${page}&${limit}&${category}&${sort}&${order}&${search}`;
+
+            console.log(url)
+            axios.get(url)
             .then((res) => {
                 console.log(res.data)
                 setPizzas(res.data)
-                setIsLoading(false)
+                    setIsLoading(false)
             })
         window.scrollTo(0, 0)
-    }, [currentSort, currentCategory])
+    }, [currentSort, currentCategory, p.currentPage, p.searchValue])
 
     return (<div className="content">
         <div className="container">
@@ -44,6 +48,7 @@ function Home() {
                                                       sizes={obj.sizes}
                                                       types={obj.types}/>)}
             </div>
+            <Paginator currentPage={p.currentPage} totalCount={10} sizePage={4} onPageNumber={p.setCurrentPage}/>
         </div>
     </div>)
 }
