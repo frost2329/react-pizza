@@ -7,13 +7,19 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import Paginator from "../components/Paginator/Paginator";
 import {AppContext} from "../App";
+import { useSelector, useDispatch } from 'react-redux'
+import { setPizzas } from '../redux/slices/pizzasSlice'
 
 function Home() {
+    const pizzas = useSelector((state) => state.pizzas.items)
+    const dispatch = useDispatch()
+
     const {searchValue, currentPage, setCurrentPage} = React.useContext(AppContext)
+
     const [isLoading, setIsLoading] = useState(true)
-    const [pizzas, setPizzas] = useState([])
     const [currentSort, setCurrentSort] = useState({name: 'популярности', sortProperty: 'rating'})
     const [currentCategory, setCurrentCategory] =useState(0);
+
     useEffect(() => {
         setIsLoading(true)
         let sort = 'sortBy=' + (currentSort.sortProperty.replace('-', ''))
@@ -27,9 +33,11 @@ function Home() {
             console.log(url)
             axios.get(url)
             .then((res) => {
-                console.log(res.data)
-                setPizzas(res.data)
-                    setIsLoading(false)
+                //console.log(res.data)
+                //setPizzas(res.data)
+                debugger;
+                dispatch(setPizzas(res.data))
+                setIsLoading(false)
             })
         window.scrollTo(0, 0)
     }, [currentSort, currentCategory, currentPage, searchValue])
