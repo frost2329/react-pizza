@@ -2,9 +2,8 @@ import React from "react";
 import logoSvg from '../assets/img/pizza-logo.svg'
 import {Link} from "react-router-dom";
 import Search from "./Search/Search";
-import {AppContext} from "../App";
 function Header() {
-    const {searchValue, onChangeSearchValue} = React.useContext(AppContext)
+
     return (
         <div className="header">
             <div className="container">
@@ -18,8 +17,7 @@ function Header() {
                     </div>
                 </div>
                 <div>
-                    <Search searchValue={searchValue}
-                            onChangeSearchValue={onChangeSearchValue}/>
+                    <Search />
                 </div>
                 <div className="header__cart">
                     <Link to="/cart" className="button button--cart">

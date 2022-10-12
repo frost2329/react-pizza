@@ -1,9 +1,27 @@
 import s from './Search.module.scss';
+import {setSearch} from "../../redux/slices/filterSlice";
+import {useDispatch} from "react-redux";
+import {useCallback, useRef, useState} from "react";
+import debounce from 'lodash.debounce'
+function Search() {
+    const [value, setValue] = useState('')
+    const dispatch = useDispatch()
+    const inputRef = useRef()
 
-function Search(p) {
+    const updateSearchValue = useCallback(debounce((value)=>{
+        dispatch(setSearch(value))
+    }, 500), [])
+
+    const onChangeSearchValue = (value)=>{
+        setValue(value);
+        updateSearchValue(value);
+        inputRef.current.focus()
+    }
+
     return (
         <div className={s.root}>
-            <svg className={s.icon} enableBackground="new 0 0 32 32"
+            <svg className={s.icon}
+                 enableBackground="new 0 0 32 32"
                 id="EditableLine" version="1.1" viewBox="0 0 32 32"
                 xmlns="http://www.w3.org/2000/svg">
                 <circle
@@ -32,9 +50,9 @@ function Search(p) {
                     y2="20.366"
                 />
             </svg>
-            <input className={s.input} onChange={(e)=>{p.onChangeSearchValue(e.target.value)}} type="text" value={p.searchValue}/>
-            {p.searchValue && (
-                <svg onClick={()=>p.onChangeSearchValue('')}
+            <input ref={inputRef} className={s.input} onChange={(e) => onChangeSearchValue(e.target.value)} type="text" value={value}/>
+            {value && (
+                <svg onClick={()=>onChangeSearchValue('')}
                      className={s.clearIcon} viewBox="0 0 20 20"
                      xmlns="http://www.w3.org/2000/svg">
                     <path d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />

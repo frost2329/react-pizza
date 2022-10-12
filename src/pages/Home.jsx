@@ -1,52 +1,46 @@
 import React from "react";
+import axios from "axios";
+import {useEffect, useState} from "react";
+
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import LoadingBlock from "../components/PizzaBlock/LoadingBlock";
 import PizzaBlock from "../components/PizzaBlock";
-import {useEffect, useState} from "react";
-import axios from "axios";
 import Paginator from "../components/Paginator/Paginator";
-import {AppContext} from "../App";
-import { useSelector, useDispatch } from 'react-redux'
-import { setPizzas } from '../redux/slices/pizzasSlice'
+
+import {useSelector, useDispatch} from 'react-redux'
+import {setPizzas} from '../redux/slices/pizzasSlice'
+import {setSort, setCategory} from '../redux/slices/filterSlice'
 
 function Home() {
-    const pizzas = useSelector((state) => state.pizzas.items)
-    const dispatch = useDispatch()
-
-    const {searchValue, currentPage, setCurrentPage} = React.useContext(AppContext)
-
     const [isLoading, setIsLoading] = useState(true)
-    const [currentSort, setCurrentSort] = useState({name: 'популярности', sortProperty: 'rating'})
-    const [currentCategory, setCurrentCategory] =useState(0);
+    const dispatch = useDispatch()
+    const pizzas = useSelector((state) => state.pizzas.items)
 
+    let {currentSort, currentCategory, searchValue, currentPageNumber} = useSelector((state) => state.filter)
     useEffect(() => {
         setIsLoading(true)
         let sort = 'sortBy=' + (currentSort.sortProperty.replace('-', ''))
         let order = 'order=' + (currentSort.sortProperty.includes('-') ? 'desc' : 'asc')
-        let category = currentCategory === 0 ?'' :'category='+currentCategory
+        let category = currentCategory === 0 ? '' : 'category=' + currentCategory
         let limit = 'limit=' + 4
-        let page = 'page=' + currentPage
+        let page = 'page=' + currentPageNumber
         let search = 'search=' + searchValue
         let url = `https://62f53aa6ac59075124ce14b4.mockapi.io/items?${page}&${limit}&${category}&${sort}&${order}&${search}`;
 
-            console.log(url)
-            axios.get(url)
-            .then((res) => {
-                //console.log(res.data)
-                //setPizzas(res.data)
-                debugger;
-                dispatch(setPizzas(res.data))
-                setIsLoading(false)
-            })
+        axios.get(url).then((res) => {
+            dispatch(setPizzas(res.data))
+            setIsLoading(false)
+        })
         window.scrollTo(0, 0)
-    }, [currentSort, currentCategory, currentPage, searchValue])
+    }, [currentSort, currentCategory, currentPageNumber, searchValue])
 
     return (<div className="content">
         <div className="container">
             <div className="content__top">
-                <Categories currentCategory={currentCategory} setCurrentCategory={setCurrentCategory}/>
-                <Sort currentSort={currentSort} setCurrentSort={setCurrentSort}/>
+                <Categories currentCategory={currentCategory}
+                            setCurrentCategory={(value) => dispatch(setCategory(value))}/>
+                <Sort currentSort={currentSort} setCurrentSort={(value) => dispatch(setSort(value))}/>
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
@@ -59,8 +53,9 @@ function Home() {
                                                       sizes={obj.sizes}
                                                       types={obj.types}/>)}
             </div>
-            <Paginator currentPage={currentPage} totalCount={10} sizePage={4} onPageNumber={setCurrentPage}/>
+            <Paginator currentPageNumber={currentPageNumber} totalCount={10} sizePage={4}/>
         </div>
     </div>)
 }
+
 export default Home
