@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import {Route, Routes} from "react-router-dom";
 import NotFound from "./pages/NotFound";
-import React from "react";
+import React, {useEffect} from "react";
 
 function App() {
     return (
