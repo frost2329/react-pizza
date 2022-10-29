@@ -1,4 +1,5 @@
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
+
 export const sortList = [
     {name: 'популярности +', sortProperty: 'rating'},
     {name: 'популярности -', sortProperty: 'rating-'},
@@ -7,6 +8,7 @@ export const sortList = [
     {name: 'алфавиту +', sortProperty: 'title'},
     {name: 'алфавиту -', sortProperty: 'title-'}
 ]
+
 function Sort({currentSort, setCurrentSort}) {
     const sortRef = useRef();
     const [isOpen, setIsOpen] = useState(false)
@@ -14,7 +16,17 @@ function Sort({currentSort, setCurrentSort}) {
         setCurrentSort(obj)
         setIsOpen(!isOpen)
     }
-    console.log(sortRef)
+    useEffect(() => {
+        const handleClick = (e) => {
+            if (!e.path.includes(sortRef.current)) {
+                setIsOpen(false)
+            }
+        }
+        document.body.addEventListener('click', handleClick)
+        return () => {
+            document.body.removeEventListener('click', handleClick)
+        }
+    }, [])
     return (
         <div ref={sortRef} className="sort">
             <div className="sort__label">

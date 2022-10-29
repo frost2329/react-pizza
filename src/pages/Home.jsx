@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React from "react";
 import axios from "axios";
 import {useEffect, useState} from "react";
 import {useSelector, useDispatch} from 'react-redux'
@@ -8,7 +8,7 @@ import qs from 'qs'
 import Categories from "../components/Categories";
 import Sort, {sortList} from "../components/Sort";
 import LoadingBlock from "../components/PizzaBlock/LoadingBlock";
-import PizzaBlock from "../components/PizzaBlock";
+import PizzaBlock from "../components/PizzaBlock/PizzaBlock";
 import Paginator from "../components/Paginator/Paginator";
 
 
@@ -25,10 +25,8 @@ function Home() {
     const isMounted = React.useRef(false);
     const [isLoading, setIsLoading] = useState(true)
 
-    const pizzas = useSelector((state) => state.pizzas.items)
+    const pizzas = useSelector((state) => state.pizzas)
     let {currentSort, currentCategory, searchValue, currentPageNumber} = useSelector((state) => state.filter)
-    console.log('state: ')
-    console.log(useSelector((state) => state.filter))
 
     const getPizzas = () => {
         setIsLoading(true)
@@ -45,48 +43,6 @@ function Home() {
             setIsLoading(false)
         })
     }
-
-/*    // Кладет в адр строку параметры из стейта
-    useEffect(() => {
-        if (isMounted.current) {
-            const queryString = qs.stringify({
-                sortProperty: currentSort.sortProperty,
-                currentCategory,
-                currentPageNumber,
-            });
-
-            navigate(`?${queryString}`);
-        }
-        isMounted.current = true;
-    }, [currentCategory, currentSort.sortProperty, currentPageNumber]);
-    // Если есть параметры, забирает их и кладет в стейт
-    useEffect(() => {
-        if (window.location.search) {
-            let paramsURL = qs.parse(window.location.search.substring(1));
-            let sort = sortList.find((obj) => obj.sortProperty === paramsURL.sortProperty);
-            const paramsForState = {
-                currentSort: sort,
-                currentCategory: Number(paramsURL.currentCategory),
-                currentPageNumber: Number(paramsURL.currentPageNumber),
-                };
-            let paramsState = {currentSort, currentCategory, currentPageNumber}
-
-            console.log(JSON.stringify(paramsState) === JSON.stringify(paramsForState))
-            dispatch(
-                setFilters(paramsForState),
-            );
-            isSearch.current = true;
-        }
-    }, []);
-    // Если не первый рендер, то запрашиваем пиццы
-    useEffect(() => {
-        console.log(isSearch);
-        window.scrollTo(0, 0)
-        if (!isSearch.current) {
-            getPizzas()
-        }
-        isSearch.current = false;
-    }, [currentSort.sortProperty, currentCategory, currentPageNumber, searchValue])*/
 
     // Кладет в адр строку параметры из стейта
     useEffect(() => {
@@ -112,11 +68,9 @@ function Home() {
                 currentPageNumber: Number(paramsURL.currentPageNumber),
             };
             let paramsState = {currentSort, currentCategory, currentPageNumber}
-
-            console.log(JSON.stringify(paramsState) === JSON.stringify(paramsForState))
             if (JSON.stringify(paramsState) === JSON.stringify(paramsForState)) {
-                    getPizzas()
-            }else {
+                getPizzas()
+            } else {
                 dispatch(setFilters(paramsForState));
             }
             isSearch.current = true;
@@ -124,7 +78,6 @@ function Home() {
     }, []);
     // Если не первый рендер, то запрашиваем пиццы
     useEffect(() => {
-        console.log(isSearch);
         window.scrollTo(0, 0)
         if (!isSearch.current) {
             getPizzas()
@@ -143,12 +96,15 @@ function Home() {
             <div className="content__items">
                 {isLoading
                     ? [...new Array(8)].map((_, i) => <LoadingBlock key={i}/>)
-                    : pizzas.map((obj) => <PizzaBlock key={obj.id}
-                                                      price={obj.price}
-                                                      title={obj.title}
-                                                      imageUrl={obj.imageUrl}
-                                                      sizes={obj.sizes}
-                                                      types={obj.types}/>)}
+                    : pizzas.items.map((obj) => <PizzaBlock key={obj.id}
+                                                            id={obj.id}
+                                                            price={obj.price}
+                                                            title={obj.title}
+                                                            imageUrl={obj.imageUrl}
+                                                            sizes={obj.sizes}
+                                                            types={obj.types}
+                                                            sizesNames={pizzas.sizesNames}
+                                                            typesNames={pizzas.typesNames}/>)}
             </div>
             <Paginator currentPageNumber={currentPageNumber} totalCount={10} sizePage={4}/>
         </div>
