@@ -10,7 +10,6 @@ function Cart() {
     let pizzasState = useSelector((state) => state.pizzas)
 
     if(cartState.items.length<=0){return <CartEmpty/>}
-
     return <div className="content">
         <div className="container container--cart">
             <div className="cart">

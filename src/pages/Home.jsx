@@ -1,6 +1,5 @@
 import React from "react";
-import axios from "axios";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {useSelector, useDispatch} from 'react-redux'
 import {useNavigate} from "react-router-dom";
 import qs from 'qs'
@@ -12,7 +11,7 @@ import PizzaBlock from "../components/PizzaBlock/PizzaBlock";
 import Paginator from "../components/Paginator/Paginator";
 
 
-import {setPizzas} from '../redux/slices/pizzasSlice'
+import {fetchPizzas} from '../redux/slices/pizzasSlice'
 import {setSort, setCategory, setFilters} from '../redux/slices/filterSlice'
 
 
@@ -23,26 +22,10 @@ function Home() {
 
     const isSearch = React.useRef(false);
     const isMounted = React.useRef(false);
-    const [isLoading, setIsLoading] = useState(true)
+    //const [isLoading, setIsLoading] = useState(true)
 
-    const pizzas = useSelector((state) => state.pizzas)
+    const {items, status, sizesNames, typesNames} = useSelector((state) => state.pizzas)
     let {currentSort, currentCategory, searchValue, currentPageNumber} = useSelector((state) => state.filter)
-
-    const getPizzas = () => {
-        setIsLoading(true)
-        let category = currentCategory === 0 ? '' : 'category=' + currentCategory
-        let sort = 'sortBy=' + (currentSort.sortProperty.replace('-', ''))
-        let order = 'order=' + (currentSort.sortProperty.includes('-') ? 'desc' : 'asc')
-        let limit = 'limit=' + 4
-        let page = 'page=' + currentPageNumber
-        let search = 'search=' + searchValue
-
-        let url = `https://62f53aa6ac59075124ce14b4.mockapi.io/items?${page}&${limit}&${category}&${sort}&${order}&${search}`;
-        axios.get(url).then((res) => {
-            dispatch(setPizzas(res.data))
-            setIsLoading(false)
-        })
-    }
 
     // Кладет в адр строку параметры из стейта
     useEffect(() => {
@@ -69,7 +52,7 @@ function Home() {
             };
             let paramsState = {currentSort, currentCategory, currentPageNumber}
             if (JSON.stringify(paramsState) === JSON.stringify(paramsForState)) {
-                getPizzas()
+                dispatch(fetchPizzas({currentCategory, currentSort, currentPageNumber, searchValue}))
             } else {
                 dispatch(setFilters(paramsForState));
             }
@@ -80,7 +63,7 @@ function Home() {
     useEffect(() => {
         window.scrollTo(0, 0)
         if (!isSearch.current) {
-            getPizzas()
+            dispatch(fetchPizzas({currentCategory, currentSort, currentPageNumber, searchValue}))
         }
         isSearch.current = false;
     }, [currentSort.sortProperty, currentCategory, currentPageNumber, searchValue])
@@ -94,17 +77,17 @@ function Home() {
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
-                {isLoading
+                {status==='pending'
                     ? [...new Array(8)].map((_, i) => <LoadingBlock key={i}/>)
-                    : pizzas.items.map((obj) => <PizzaBlock key={obj.id}
+                    : items.map((obj) => <PizzaBlock key={obj.id}
                                                             id={obj.id}
                                                             price={obj.price}
                                                             title={obj.title}
                                                             imageUrl={obj.imageUrl}
                                                             sizes={obj.sizes}
                                                             types={obj.types}
-                                                            sizesNames={pizzas.sizesNames}
-                                                            typesNames={pizzas.typesNames}/>)}
+                                                            sizesNames={sizesNames}
+                                                            typesNames={typesNames}/>)}
             </div>
             <Paginator currentPageNumber={currentPageNumber} totalCount={10} sizePage={4}/>
         </div>
