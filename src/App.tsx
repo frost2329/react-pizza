@@ -4,14 +4,16 @@ import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import {Route, Routes} from "react-router-dom";
 import NotFound from "./pages/NotFound";
-import React, {useEffect} from "react";
+import * as React from "react";
+import FullPizza from "./pages/FullPizza";
 
-function App() {
+const App: React.FC = () => {
     return (
         <div className="wrapper">
             <Header />
             <Routes>
                 <Route path='/' element={<Home />}/>
+                <Route path="pizza/:id" element={<FullPizza />}/>
                 <Route path='cart' element={<Cart />}/>
                 <Route path='*' element={<NotFound />}/>
             </Routes>

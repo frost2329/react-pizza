@@ -1,6 +1,6 @@
 import React from "react";
 import {useEffect} from "react";
-import {useSelector, useDispatch} from 'react-redux'
+import {useSelector} from 'react-redux'
 import {useNavigate} from "react-router-dom";
 import qs from 'qs'
 
@@ -13,19 +13,19 @@ import Paginator from "../components/Paginator/Paginator";
 
 import {fetchPizzas} from '../redux/slices/pizzasSlice'
 import {setSort, setCategory, setFilters} from '../redux/slices/filterSlice'
+import {selectFilterData, selectPizzaData} from "../redux/slices/selectors";
+import {useAppDispatch} from "../redux/store";
 
 
 function Home() {
-    window._state = useSelector((state) => state)
     const navigate = useNavigate();
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const isSearch = React.useRef(false);
     const isMounted = React.useRef(false);
     //const [isLoading, setIsLoading] = useState(true)
-
-    const {items, status, sizesNames, typesNames} = useSelector((state) => state.pizzas)
-    let {currentSort, currentCategory, searchValue, currentPageNumber} = useSelector((state) => state.filter)
+    const {items, status, sizesNames, typesNames} = useSelector(selectPizzaData)
+    const {currentSort, currentCategory, searchValue, currentPageNumber} = useSelector(selectFilterData)
 
     // Кладет в адр строку параметры из стейта
     useEffect(() => {
@@ -46,13 +46,14 @@ function Home() {
             let paramsURL = qs.parse(window.location.search.substring(1));
             let sort = sortList.find((obj) => obj.sortProperty === paramsURL.sortProperty);
             const paramsForState = {
-                currentSort: sort,
+                currentSort: sort? sort: sortList[0],
                 currentCategory: Number(paramsURL.currentCategory),
                 currentPageNumber: Number(paramsURL.currentPageNumber),
+                searchValue: ''
             };
             let paramsState = {currentSort, currentCategory, currentPageNumber}
             if (JSON.stringify(paramsState) === JSON.stringify(paramsForState)) {
-                dispatch(fetchPizzas({currentCategory, currentSort, currentPageNumber, searchValue}))
+                dispatch(fetchPizzas({currentCategory, currentSort: currentSort.sortProperty, currentPageNumber, searchValue}))
             } else {
                 dispatch(setFilters(paramsForState));
             }
@@ -63,7 +64,7 @@ function Home() {
     useEffect(() => {
         window.scrollTo(0, 0)
         if (!isSearch.current) {
-            dispatch(fetchPizzas({currentCategory, currentSort, currentPageNumber, searchValue}))
+            dispatch(fetchPizzas({currentCategory, currentSort: currentSort.sortProperty, currentPageNumber, searchValue}))
         }
         isSearch.current = false;
     }, [currentSort.sortProperty, currentCategory, currentPageNumber, searchValue])
@@ -77,17 +78,12 @@ function Home() {
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
-                {status==='pending'
+                {status === 'pending'
                     ? [...new Array(8)].map((_, i) => <LoadingBlock key={i}/>)
                     : items.map((obj) => <PizzaBlock key={obj.id}
-                                                            id={obj.id}
-                                                            price={obj.price}
-                                                            title={obj.title}
-                                                            imageUrl={obj.imageUrl}
-                                                            sizes={obj.sizes}
-                                                            types={obj.types}
-                                                            sizesNames={sizesNames}
-                                                            typesNames={typesNames}/>)}
+                                                     item={obj}
+                                                     sizesNames={sizesNames}
+                                                     typesNames={typesNames}/>)}
             </div>
             <Paginator currentPageNumber={currentPageNumber} totalCount={10} sizePage={4}/>
         </div>

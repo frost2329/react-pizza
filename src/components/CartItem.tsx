@@ -1,8 +1,15 @@
 import React from "react";
 import {useDispatch} from "react-redux";
-import {minusItem, plusItem, removeItem} from "../redux/slices/cartSlice";
+import {CartItemType, minusItem, plusItem, removeItem} from "../redux/slices/cartSlice";
 
-function CartItem(p) {
+type CartItemProps = {
+    key:number,
+    cartItem: CartItemType,
+    typesNames: string[]
+
+}
+
+const CartItem:React.FC<CartItemProps> = (p) => {
     const dispatch = useDispatch()
     return <div className="cart__item">
         <div className="cart__item-img">

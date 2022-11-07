@@ -1,29 +1,28 @@
 import s from './Search.module.scss';
 import {setSearch} from "../../redux/slices/filterSlice";
 import {useDispatch} from "react-redux";
-import {useCallback, useRef, useState} from "react";
+import React, {useCallback, useRef, useState} from "react";
 import debounce from 'lodash.debounce'
-function Search() {
-    const [value, setValue] = useState('')
-    const dispatch = useDispatch()
-    const inputRef = useRef()
 
-    const updateSearchValue = useCallback(debounce((value)=>{
+function Search() {
+    const dispatch = useDispatch()
+    const [value, setValue] = useState<string>('')
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    const updateSearchValue = useCallback(debounce((value:string) => {
         dispatch(setSearch(value))
     }, 500), [])
 
-    const onChangeSearchValue = (value)=>{
+    const onChangeSearchValue = (value: string) => {
         setValue(value);
         updateSearchValue(value);
-        inputRef.current.focus()
+        inputRef.current?.focus()
     }
 
     return (
         <div className={s.root}>
-            <svg className={s.icon}
-                 enableBackground="new 0 0 32 32"
-                id="EditableLine" version="1.1" viewBox="0 0 32 32"
-                xmlns="http://www.w3.org/2000/svg">
+            <svg className={s.icon} enableBackground="new 0 0 32 32" id="EditableLine" version="1.1" viewBox="0 0 32 32"
+                 xmlns="http://www.w3.org/2000/svg">
                 <circle
                     cx="14"
                     cy="14"
@@ -50,12 +49,18 @@ function Search() {
                     y2="20.366"
                 />
             </svg>
-            <input ref={inputRef} className={s.input} onChange={(e) => onChangeSearchValue(e.target.value)} type="text" value={value}/>
+            <input ref={inputRef}
+                   className={s.input}
+                   onChange={(e:React.ChangeEvent<HTMLInputElement>)=>onChangeSearchValue(e.target.value)}
+                   type="text"
+                   value={String(value)}
+            />
             {value && (
-                <svg onClick={()=>onChangeSearchValue('')}
+                <svg onClick={() =>onChangeSearchValue('')}
                      className={s.clearIcon} viewBox="0 0 20 20"
                      xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />
+                    <path
+                        d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z"/>
                 </svg>
             )}
         </div>

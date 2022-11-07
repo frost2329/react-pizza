@@ -1,10 +1,12 @@
-import React from "react";
+import * as React from "react";
 import logoSvg from '../assets/img/pizza-logo.svg'
 import {Link} from "react-router-dom";
 import Search from "./Search/Search";
 import {useSelector} from "react-redux";
-function Header() {
-    let {totalCount, totalSum} = useSelector((state) => state.cart)
+import {selectCartData} from "../redux/slices/selectors";
+
+const Header = () => {
+    let {totalCount, totalSum} = useSelector(selectCartData)
     return (
         <div className="header">
             <div className="container">

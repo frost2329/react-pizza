@@ -1,4 +1,9 @@
-function Categories({currentCategory, setCurrentCategory}) {
+import * as React from 'react'
+type CategoriesProps = {
+    currentCategory: number,
+    setCurrentCategory : (index: number)=>void
+}
+const Categories: React.FC<CategoriesProps> = ({currentCategory, setCurrentCategory}) => {
     const categoryTitle = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые']
     return (
         <div className="categories">

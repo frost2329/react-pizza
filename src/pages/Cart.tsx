@@ -1,13 +1,15 @@
 import {Link} from "react-router-dom";
 import {clearCart} from "../redux/slices/cartSlice";
 import CartItem from "../components/CartItem";
-import {useDispatch, useSelector} from "react-redux";
+import { useSelector} from "react-redux";
 import CartEmpty from "../components/CartEmpty";
+import {selectCartData, selectPizzaData} from "../redux/slices/selectors";
+import {useAppDispatch} from "../redux/store";
 
 function Cart() {
-    let dispatch = useDispatch()
-    let cartState = useSelector((state) => state.cart)
-    let pizzasState = useSelector((state) => state.pizzas)
+    let dispatch = useAppDispatch()
+    let cartState = useSelector(selectCartData)
+    let pizzasState = useSelector(selectPizzaData)
 
     if(cartState.items.length<=0){return <CartEmpty/>}
     return <div className="content">

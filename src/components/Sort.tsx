@@ -1,6 +1,9 @@
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
+import {SortItemType} from "../redux/slices/filterSlice";
 
-export const sortList = [
+type SortProps = { currentSort: SortItemType, setCurrentSort: (obj: SortItemType) => void }
+
+export const sortList: SortItemType[] = [
     {name: 'популярности +', sortProperty: 'rating'},
     {name: 'популярности -', sortProperty: 'rating-'},
     {name: 'цене +', sortProperty: 'price'},
@@ -9,16 +12,16 @@ export const sortList = [
     {name: 'алфавиту -', sortProperty: 'title-'}
 ]
 
-function Sort({currentSort, setCurrentSort}) {
-    const sortRef = useRef();
+const Sort: React.FC<SortProps> = ({currentSort, setCurrentSort}) => {
+    const sortRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false)
-    const onClickListItem = (obj) => {
+    const onClickListItem = (obj: SortItemType) => {
         setCurrentSort(obj)
         setIsOpen(!isOpen)
     }
     useEffect(() => {
-        const handleClick = (e) => {
-            if (!e.path.includes(sortRef.current)) {
+        const handleClick = (e: MouseEvent) => {
+            if (sortRef.current && !e.composedPath().includes(sortRef.current)) {
                 setIsOpen(false)
             }
         }
@@ -27,6 +30,8 @@ function Sort({currentSort, setCurrentSort}) {
             document.body.removeEventListener('click', handleClick)
         }
     }, [])
+
+
     return (
         <div ref={sortRef} className="sort">
             <div className="sort__label">

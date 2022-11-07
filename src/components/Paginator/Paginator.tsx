@@ -3,13 +3,17 @@ import s from "./Paginator.module.scss";
 import {useDispatch} from "react-redux";
 import {setCurrentPageNumber} from "../../redux/slices/filterSlice";
 
-const Paginator = (props) => {
+type PaginatorProps = {
+    currentPageNumber: number,
+    totalCount: number,
+    sizePage: number
+}
+const Paginator: React.FC<PaginatorProps> = (props) => {
     const dispatch = useDispatch()
-
+    let [portionNumber, setPortionNumber] = useState(1);
     let portionSize = 5
     let pageCount = Math.ceil(props.totalCount / props.sizePage);
     let portionCount = Math.ceil(pageCount / portionSize);
-    let [portionNumber, setPortionNumber] = useState(1);
     let leftPortionPageNumber = (portionNumber-1) * portionSize + 1;
     let rightPortionPageNumber = portionNumber * portionSize;
     let pages = [];
