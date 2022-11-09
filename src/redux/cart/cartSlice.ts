@@ -1,20 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {CartItemType, CartSliceState} from "./cartTypes";
 
-export type CartItemType = {
-    type: number,
-    size: number,
-    id: number,
-    price: number,
-    title: string,
-    imageUrl: string,
-    count: number
-}
-
-interface CartSliceState {
-    items: CartItemType[],
-    totalCount: number;
-    totalSum: number;
-}
 
 const initialState: CartSliceState = {
     items: [],
@@ -22,9 +8,14 @@ const initialState: CartSliceState = {
     totalSum: 0
 }
 
+const getCartState:()=> CartSliceState = () => {
+    const data = window.localStorage.getItem('cartState')
+    return data ? JSON.parse(data) : initialState
+}
+
 export const cartSlice = createSlice({
     name: 'cart',
-    initialState,
+    initialState: getCartState(),
     reducers: {
         addItemToCart: (state: CartSliceState, action: PayloadAction<CartItemType>) => {
             const findItem = state.items.find(item => item.id === action.payload.id &&

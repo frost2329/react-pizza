@@ -11,10 +11,11 @@ import PizzaBlock from "../components/PizzaBlock/PizzaBlock";
 import Paginator from "../components/Paginator/Paginator";
 
 
-import {fetchPizzas} from '../redux/slices/pizzasSlice'
-import {setSort, setCategory, setFilters} from '../redux/slices/filterSlice'
+import {fetchPizzas} from '../redux/pizza/pizzasSlice'
+import {setSort, setCategory, setFilters} from '../redux/filter/filterSlice'
 import {selectFilterData, selectPizzaData} from "../redux/slices/selectors";
 import {useAppDispatch} from "../redux/store";
+import {Status} from "../redux/pizza/pizzaTypes";
 
 
 function Home() {
@@ -78,7 +79,7 @@ function Home() {
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
-                {status === 'pending'
+                {status === Status.LOADING
                     ? [...new Array(8)].map((_, i) => <LoadingBlock key={i}/>)
                     : items.map((obj) => <PizzaBlock key={obj.id}
                                                      item={obj}

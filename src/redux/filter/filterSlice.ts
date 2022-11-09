@@ -1,16 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {FilterSliceState, SortItemType} from "./filterTypes";
 
-export  type SortItemType = {
-    name: string,
-    sortProperty: string
-}
 
-export interface FilterSliceState {
-    currentSort: SortItemType,
-    currentCategory: number,
-    currentPageNumber: number,
-    searchValue: string
-}
 
 const initialState: FilterSliceState = {
     currentSort: {name: 'популярности +', sortProperty: 'rating'},

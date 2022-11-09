@@ -1,5 +1,5 @@
 import s from './Search.module.scss';
-import {setSearch} from "../../redux/slices/filterSlice";
+import {setSearch} from "../../redux/filter/filterSlice";
 import {useDispatch} from "react-redux";
 import React, {useCallback, useRef, useState} from "react";
 import debounce from 'lodash.debounce'

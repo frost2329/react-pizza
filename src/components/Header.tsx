@@ -4,9 +4,18 @@ import {Link} from "react-router-dom";
 import Search from "./Search/Search";
 import {useSelector} from "react-redux";
 import {selectCartData} from "../redux/slices/selectors";
+import {useEffect, useRef} from "react";
 
 const Header = () => {
-    let {totalCount, totalSum} = useSelector(selectCartData)
+    const isMount = useRef(false)
+    const cartState = useSelector(selectCartData)
+    const {totalCount, totalSum} = cartState
+    useEffect(()=>{
+        if (isMount) {
+            window.localStorage.setItem('cartState', JSON.stringify(cartState))
+        }
+        isMount.current = true
+    }, [cartState])
     return (
         <div className="header">
             <div className="container">

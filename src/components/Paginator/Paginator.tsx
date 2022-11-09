@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import s from "./Paginator.module.scss";
 import {useDispatch} from "react-redux";
-import {setCurrentPageNumber} from "../../redux/slices/filterSlice";
+import {setCurrentPageNumber} from "../../redux/filter/filterSlice";
 
 type PaginatorProps = {
     currentPageNumber: number,

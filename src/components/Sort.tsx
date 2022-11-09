@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {SortItemType} from "../redux/slices/filterSlice";
+import {SortItemType} from "../redux/filter/filterTypes";
 
 type SortProps = { currentSort: SortItemType, setCurrentSort: (obj: SortItemType) => void }
 

@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import {useDispatch} from "react-redux";
-import {addItemToCart} from "../../redux/slices/cartSlice";
+import {addItemToCart} from "../../redux/cart/cartSlice";
 import {Link} from "react-router-dom";
-import {PizzaItemType} from "../../redux/slices/pizzasSlice";
+import {PizzaItemType} from "../../redux/pizza/pizzaTypes";
 
 type PizzaBlockProps = {
     item: PizzaItemType
