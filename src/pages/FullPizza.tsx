@@ -1,18 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import styles from './FullPizza.module.scss';
 import {fetchPizzaById} from "../redux/pizza/pizzasSlice";
 import {useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import {useAppDispatch} from "../redux/store";
-import {selectPizzaData} from "../redux/slices/selectors";
+import {selectPizzaData} from "../redux/selectors";
 import {Status} from "../redux/pizza/pizzaTypes";
 import {addItemToCart} from "../redux/cart/cartSlice";
 
-const FullPizza = () => {
+const FullPizza:React.FC = () => {
     const dispatch = useAppDispatch();
     const {typesNames, fullPizza, status} = useSelector(selectPizzaData)
     const {id} = useParams();
-
     const [pizzaCount, setPizzaCount] = useState(0)
     const [currentSize, setCurrentSize] = useState(26)
     const [currentType, setCurrentType] = useState(0)
@@ -76,7 +75,6 @@ const FullPizza = () => {
                         </button>
                     </div>
                 </div>
-
             </div>
         )
 };

@@ -13,18 +13,16 @@ import Paginator from "../components/Paginator/Paginator";
 
 import {fetchPizzas} from '../redux/pizza/pizzasSlice'
 import {setSort, setCategory, setFilters} from '../redux/filter/filterSlice'
-import {selectFilterData, selectPizzaData} from "../redux/slices/selectors";
+import {selectFilterData, selectPizzaData} from "../redux/selectors";
 import {useAppDispatch} from "../redux/store";
 import {Status} from "../redux/pizza/pizzaTypes";
 
 
-function Home() {
+const Home:React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch()
-
     const isSearch = React.useRef(false);
     const isMounted = React.useRef(false);
-    //const [isLoading, setIsLoading] = useState(true)
     const {items, status, sizesNames, typesNames} = useSelector(selectPizzaData)
     const {currentSort, currentCategory, searchValue, currentPageNumber} = useSelector(selectFilterData)
 

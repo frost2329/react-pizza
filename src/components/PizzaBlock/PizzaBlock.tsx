@@ -12,7 +12,7 @@ type PizzaBlockProps = {
 const PizzaBlock: React.FC<PizzaBlockProps> = ({item, sizesNames, typesNames}) => {
     const dispatch = useDispatch()
     const [pizzaCount, setPizzaCount] = useState(0)
-    const [currentSize, setCurrentSize] = useState(26)
+    const [currentSize, setCurrentSize] = useState(item.sizes[0])
     const [currentType, setCurrentType] = useState(0)
 
     let onAddPizzaToCart = () => {

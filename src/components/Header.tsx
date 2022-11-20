@@ -3,7 +3,7 @@ import logoSvg from '../assets/img/pizza-logo.svg'
 import {Link} from "react-router-dom";
 import Search from "./Search/Search";
 import {useSelector} from "react-redux";
-import {selectCartData} from "../redux/slices/selectors";
+import {selectCartData} from "../redux/selectors";
 import {useEffect, useRef} from "react";
 
 const Header = () => {
@@ -29,6 +29,13 @@ const Header = () => {
                     </div>
                 </div>
                 <Search />
+                <div>
+                    <Link to={'orders'}>
+                    <div  className="button button--cart">Заказы</div>
+                </Link>
+                </div>
+
+
                 <div className="header__cart">
                     <Link to="/cart" className="button button--cart">
                         <span>{totalSum} ₽</span>

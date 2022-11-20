@@ -6,6 +6,7 @@ import {Route, Routes} from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import * as React from "react";
 import FullPizza from "./pages/FullPizza";
+import Orders from "./pages/Orders";
 
 const App: React.FC = () => {
     return (
@@ -15,6 +16,7 @@ const App: React.FC = () => {
                 <Route path='/' element={<Home />}/>
                 <Route path="pizza/:id" element={<FullPizza />}/>
                 <Route path='cart' element={<Cart />}/>
+                <Route path='orders' element={<Orders />}/>
                 <Route path='*' element={<NotFound />}/>
             </Routes>
         </div>

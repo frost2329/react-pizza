@@ -3,14 +3,39 @@ import {clearCart} from "../redux/cart/cartSlice";
 import CartItem from "../components/CartItem";
 import { useSelector} from "react-redux";
 import CartEmpty from "../components/CartEmpty";
-import {selectCartData, selectPizzaData} from "../redux/slices/selectors";
+import {selectCartData, selectPizzaData} from "../redux/selectors";
 import {useAppDispatch} from "../redux/store";
+import {postOrder} from "../redux/orders/ordersSlice";
+import React, {useState} from "react";
+import styles from "./NotFound.module.scss";
 
-function Cart() {
+const Cart:React.FC =  () => {
     let dispatch = useAppDispatch()
     let cartState = useSelector(selectCartData)
     let pizzasState = useSelector(selectPizzaData)
+    const [isOrderReady, setIsOrderReady] = useState(false)
 
+    const postPizzaOrders:()=>void = async () => {
+        try {
+            dispatch(postOrder(cartState));
+            setIsOrderReady(true)
+            dispatch(clearCart())
+        }catch (e) {
+            console.log(e)
+        }
+    }
+    if (isOrderReady) {return (
+        <div className={styles.root}>
+            <h1>
+                <span>😍 </span>
+                <br/>
+                Заказ оформлен
+            </h1>
+            <p className={styles.description}>
+                Мы уже в пути
+            </p>
+        </div>
+    )}
     if(cartState.items.length<=0){return <CartEmpty/>}
     return <div className="content">
         <div className="container container--cart">
@@ -75,7 +100,7 @@ function Cart() {
 
                             <span>Вернуться назад</span>
                         </Link>
-                        <div className="button pay-btn">
+                        <div onClick={postPizzaOrders} className="button pay-btn">
                             <span>Оплатить сейчас</span>
                         </div>
                     </div>
