@@ -5,6 +5,7 @@ import React, {useEffect, useState} from "react";
 import {fetchOrders} from "../redux/orders/ordersSlice";
 import {useAppDispatch} from "../redux/store";
 import s from './Orders.module.scss';
+import styles from "./NotFound.module.scss";
 
 const Orders: React.FC = () => {
     const dispatch = useAppDispatch()
@@ -16,7 +17,16 @@ const Orders: React.FC = () => {
     }, [])
 
     if (ordersState.orders.length <= 0) {
-        return <div>Заказов нет</div>
+        return <div className={styles.root}>
+            <h1>
+                <span>😢 </span>
+                <br/>
+                У вас пока еще нет заказов
+            </h1>
+            <p className={styles.description}>
+                Исправте это немедленно
+            </p>
+        </div>
     }
     return <div className="content">
         <div className="container container--cart">

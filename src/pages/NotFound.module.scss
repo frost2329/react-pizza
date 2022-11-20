@@ -3,9 +3,14 @@
     max-width: 750px;
     margin: 0 auto;
     text-align: center;
-
     span {
         font-size: 64px;
+    }
+    @media (max-width: 800px) {
+        width: 400px;
+        h1 {
+            font-size: 30px;
+        }
     }
 }
 
