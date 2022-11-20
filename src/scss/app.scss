@@ -23,7 +23,16 @@ body {
 
 .content {
   padding: 40px 0;
-
+  &__wrapper {
+    display: flex;
+    margin-bottom: 10px;
+    justify-content: space-between;
+    align-items: center;
+    @media (max-width: 430px) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
   &__title {
     margin: 35px 0;
   }

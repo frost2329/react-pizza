@@ -16,6 +16,7 @@ import {setSort, setCategory, setFilters} from '../redux/filter/filterSlice'
 import {selectFilterData, selectPizzaData} from "../redux/selectors";
 import {useAppDispatch} from "../redux/store";
 import {Status} from "../redux/pizza/pizzaTypes";
+import Search from "../components/Search/Search";
 
 
 const Home:React.FC = () => {
@@ -75,7 +76,11 @@ const Home:React.FC = () => {
                             setCurrentCategory={(value) => dispatch(setCategory(value))}/>
                 <Sort currentSort={currentSort} setCurrentSort={(value) => dispatch(setSort(value))}/>
             </div>
-            <h2 className="content__title">Все пиццы</h2>
+            <div className={'content__wrapper'}>
+                <h2 className="content__title">Все пиццы</h2>
+                <Search/>
+            </div>
+            <div></div>
             <div className="content__items">
                 {status === Status.LOADING
                     ? [...new Array(8)].map((_, i) => <LoadingBlock key={i}/>)
